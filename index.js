@@ -27,21 +27,25 @@ const passport = require('passport');
 const bodyParser = require('body-parser');
 const CatLoggr = require('cat-loggr');
 const fs = require('fs');
-const axios = require('axios');
 const path = require('path');
 const chalk = require('chalk');
-const expressWs = require('express-ws');
+const axios = require('axios');
+const expressWs = require('express-ws')(express());
+const { db } = require('./handlers/db.js');
+const translationMiddleware = require('./handlers/translation');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
-const { db } = require('./handlers/db.js');
-const { init } = require('./handlers/init.js');
 const theme = require('./storage/theme.json');
+
 const sqlite = require("better-sqlite3");
 const SqliteStore = require("better-sqlite3-session-store")(session);
+const sessionstorage = new sqlite("sessions.db");
 
-const app = express();
-expressWs(app);
+const { loadPlugins } = require('./plugins/loadPls.js');
+let plugins = loadPlugins(path.join(__dirname, './plugins'));
+plugins = Object.values(plugins).map(plugin => plugin.config);
 
+const { init } = require('./handlers/init.js');
 const log = new CatLoggr();
 const configPath = './config.json';
 
@@ -63,123 +67,114 @@ async function updateConfig() {
 }
 
 // Update the config before starting the server
-updateConfig();
+updateConfig().then(() => {
+    const config = require(configPath);
+    const ascii = fs.readFileSync('./handlers/ascii.txt', 'utf8');
+    
+    const app = express();
+    expressWs(app);
+    
+    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(bodyParser.json());
+    app.use(cookieParser());
+    app.use(translationMiddleware);
 
-const config = require(configPath);
-const ascii = fs.readFileSync('./handlers/ascii.txt', 'utf8');
+    // Rate limiter
+    const postRateLimiter = rateLimit({
+        windowMs: 60 * 100,
+        max: 6,
+        message: 'Too many requests, please try again later'
+    });
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(cookieParser());
+    app.use((req, res, next) => {
+        if (req.method === 'POST') {
+            postRateLimiter(req, res, next);
+        } else {
+            next();
+        }
+    });
 
-// Rate Limiter for security
-const postRateLimiter = rateLimit({
-  windowMs: 60 * 100,
-  max: 6,
-  message: 'Too many requests, please try again later'
-});
+    app.set('view engine', 'ejs');
+    app.use(
+        session({
+            store: new SqliteStore({
+                client: sessionstorage,
+                expired: { clear: true, intervalMs: 9000000 }
+            }),
+            secret: "secret",
+            resave: true,
+            saveUninitialized: true
+        })
+    );
 
-app.use((req, res, next) => {
-  if (req.method === 'POST') {
-    postRateLimiter(req, res, next);
-  } else {
-    next();
-  }
-});
+    app.use(async (req, res, next) => {
+        try {
+            const settings = await db.get('settings');
+            res.locals.ogTitle = config.ogTitle;
+            res.locals.ogDescription = config.ogDescription;
+            res.locals.footer = settings.footer;
+            res.locals.theme = theme;
+            next();
+        } catch (error) {
+            console.error('Error fetching settings:', error);
+            next(error);
+        }
+    });
 
-// Session setup
-const sessionstorage = new sqlite("sessions.db");
-app.use(
-  session({
-    store: new SqliteStore({
-      client: sessionstorage,
-      expired: {
-        clear: true,
-        intervalMs: 9000000
-      }
-    }),
-    secret: "secret",
-    resave: true,
-    saveUninitialized: true
-  })
-);
+    if (config.mode === 'production') {
+        app.use((req, res, next) => {
+            res.setHeader('Cache-Control', 'no-store');
+            res.setHeader('Hydren-Product', 'OverSee');
+            res.setHeader('Expires', '5');
+            next();
+        });
 
-// Middleware
-app.use(async (req, res, next) => {
-  try {
-    const settings = await db.get('settings');
-    res.locals.ogTitle = config.ogTitle;
-    res.locals.ogDescription = config.ogDescription;
-    res.locals.footer = settings.footer;
-    res.locals.theme = theme;
-    next();
-  } catch (error) {
-    console.error('Error fetching settings:', error);
-    next(error);
-  }
-});
-
-// Security headers
-if (config.mode === 'production') {
-  app.use((req, res, next) => {
-    res.setHeader('Cache-Control', 'no-store');
-    res.setHeader('Hydren-Product', 'OverSee');
-    res.setHeader('Expires', '5');
-    next();
-  });
-
-  app.use('/assets', (req, res, next) => {
-    res.setHeader('Cache-Control', 'public, max-age=1');
-    next();
-  });
-}
-
-// Initialize passport
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Plugins and routes
-const pluginRoutes = require('./plugins/pluginmanager.js');
-app.use("/", pluginRoutes);
-const pluginDir = path.join(__dirname, 'plugins');
-const PluginViewsDir = fs.readdirSync(pluginDir).map(addonName => path.join(pluginDir, addonName, 'views'));
-app.set('views', [path.join(__dirname, 'views'), ...PluginViewsDir]);
-
-// Initialize OverSee
-init();
-
-// Log ASCII
-console.log(chalk.gray(ascii) + chalk.white(`version v${config.version}\n`));
-
-// Load routes dynamically
-const routesDir = path.join(__dirname, 'routes');
-function loadRoutes(directory) {
-  fs.readdirSync(directory).forEach(file => {
-    const fullPath = path.join(directory, file);
-    const stat = fs.statSync(fullPath);
-
-    if (stat.isDirectory()) {
-      loadRoutes(fullPath);
-    } else if (stat.isFile() && path.extname(file) === '.js') {
-      const route = require(fullPath);
-      expressWs.applyTo(route);
-      app.use("/", route);
+        app.use('/assets', (req, res, next) => {
+            res.setHeader('Cache-Control', 'public, max-age=1');
+            next();
+        });
     }
-  });
-}
-loadRoutes(routesDir);
 
-// Serve static files
-app.use(express.static('public'));
+    app.use(passport.initialize());
+    app.use(passport.session());
 
-// Start the server
-app.listen(config.port, () => log.info(`OverSee is listening on ${config.baseUri}`));
+    const pluginRoutes = require('./plugins/pluginmanager.js');
+    app.use("/", pluginRoutes);
+    const pluginDir = path.join(__dirname, 'plugins');
+    const PluginViewsDir = fs.readdirSync(pluginDir).map(addonName => path.join(pluginDir, addonName, 'views'));
+    app.set('views', [path.join(__dirname, 'views'), ...PluginViewsDir]);
 
-// Catch-all route for 404 errors
-app.get('*', async function(req, res){
-  res.render('errors/404', {
-    req,
-    name: await db.get('name') || 'OverSee',
-    logo: await db.get('logo') || false
-  });
+    // Initialize OverSee
+    init();
+
+    console.log(chalk.gray(ascii) + chalk.white(`version v${config.version}\n`));
+
+    // Load routes dynamically
+    const routesDir = path.join(__dirname, 'routes');
+    function loadRoutes(directory) {
+        fs.readdirSync(directory).forEach(file => {
+            const fullPath = path.join(directory, file);
+            const stat = fs.statSync(fullPath);
+
+            if (stat.isDirectory()) {
+                loadRoutes(fullPath);
+            } else if (stat.isFile() && path.extname(file) === '.js') {
+                const route = require(fullPath);
+                expressWs.applyTo(route);
+                app.use("/", route);
+            }
+        });
+    }
+    loadRoutes(routesDir);
+
+    app.use(express.static('public'));
+    app.listen(config.port, () => log.info(`OverSee is listening on ${config.baseUri}`));
+
+    app.get('*', async function(req, res){
+        res.render('errors/404', {
+            req,
+            name: await db.get('name') || 'OverSee',
+            logo: await db.get('logo') || false
+        });
+    });
 });
