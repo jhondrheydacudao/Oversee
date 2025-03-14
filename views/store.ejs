@@ -1,5 +1,4 @@
-
-    <%- include('./components/template') %>
+<%- include('./components/template') %>
   <!-- Main Content -->
   <main class="flex-grow container mx-auto px-4 py-8" x-data="store()">
     <div class="flex justify-between items-center w-full mx-auto pb-4">
@@ -67,7 +66,7 @@
                 <div class="flex justify-between items-center mb-4">
                     <span class="text-lg text-white font-medium">150 Coins / GB</span>
                 </div>
-                <button @click="buyRAM()" class="w-full bg-orange-600 font-medium text-white py-2 rounded-full hover:bg-orange-700 transition">
+                <button @click="buyRAM()" class="w-full bg-orange-600 font-medium text-white py-2 rounded-full hover:bg-orange-700 transition-transform transform hover:scale-105 duration-300">
                     Buy RAM
                 </button>
             </div>
@@ -79,7 +78,7 @@
                 <div class="flex justify-between items-center mb-4">
                     <span class="text-lg text-white font-medium">200 Coins / Core</span>
                 </div>
-                <button @click="buyCPU()" class="w-full bg-orange-600 font-medium text-white py-2 rounded-full hover:bg-orange-700 transition">
+                <button @click="buyCPU()" class="w-full bg-orange-600 font-medium text-white py-2 rounded-full hover:bg-orange-700 transition-transform transform hover:scale-105 duration-300">
                     Buy CPU
                 </button>
             </div>
@@ -102,12 +101,27 @@
         buyRAM() {
             if (this.ram > 0) {
                 window.location.href = `/buyresource/ram`;
+                this.notify('RAM purchased successfully!', 'success');
+            } else {
+                this.notify('Failed to purchase RAM.', 'error');
             }
         },
         buyCPU() {
             if (this.cpu > 0) {
                 window.location.href = `/buyresource/cpu`;
+                this.notify('CPU purchased successfully!', 'success');
+            } else {
+                this.notify('Failed to purchase CPU.', 'error');
             }
+        },
+        notify(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `fixed bottom-4 right-4 px-4 py-2 rounded-lg text-white ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
         }
     }
   }
