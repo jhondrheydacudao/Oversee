@@ -1,7 +1,65 @@
-    <div>
-      <%- include('./components/template') %>
-      <!-- Main Content -->
+<div>
+  <%- include('./components/template') %>
+  <!-- Main Content -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/css/alertify.css" integrity="sha512-MpdEaY2YQ3EokN6lCD6bnWMl5Gwk7RjBbpKLovlrH6X+DRokrPRAF3zQJl1hZUiLXfo2e9MrOt+udOnHCAmi5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+      /* Add animation styles */
+      .animated-input {
+          transition: all 0.3s ease;
+      }
+      .animated-input:focus {
+          transform: scale(1.05);
+          box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+      }
+      .animated-button {
+          transition: background-color 0.3s ease, transform 0.3s ease;
+      }
+      .animated-button:hover {
+          background-color: #0056b3;
+          transform: scale(1.05);
+      }
+      /* Update background colors */
+      body {
+          background-color: #1a1a2e;
+      }
+      .container {
+          background-color: #16213e;
+      }
+      .bg-custom-27292e {
+          background-color: #0f3460;
+      }
+      .bg-custom-1c1e23 {
+          background-color: #1a1a2e;
+      }
+      /* Improve readability and contrast */
+      .text-white {
+          color: #ffffff;
+      }
+      .text-gray-400 {
+          color: #b0b0b0;
+      }
+      .text-gray-300 {
+          color: #d1d1d1;
+      }
+      .border-gray-600 {
+          border-color: #4a4a4a;
+      }
+      .placeholder-gray-500::placeholder {
+          color: #7a7a7a;
+      }
+      /* Ensure design works well on mobile screens */
+      @media (max-width: 640px) {
+          .container {
+              padding: 1rem;
+          }
+          .grid-cols-1 {
+              grid-template-columns: 1fr;
+          }
+          .grid-cols-3 {
+              grid-template-columns: 1fr;
+          }
+      }
+  </style>
   <main class="flex-grow container mx-auto px-4 py-8">
       <div class="flex justify-between items-center w-full mx-auto pb-4">
           <!-- Welcome text and subtext on the left -->
@@ -63,35 +121,35 @@
       <!-- Error Messages -->
       
   
-      <div class="max-w-4xl mx-auto p-8 bg-[#27292e] rounded-lg shadow-lg">
+      <div class="max-w-4xl mx-auto p-8 bg-custom-27292e rounded-lg shadow-lg">
         <form id="createServerForm" class="space-y-8">
           <!-- Server Name -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div>
               <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Server Name</label>
               <input type="text" name="name" id="name" placeholder="my-awesome-server" 
-                class="w-full rounded-lg bg-[#1c1e23] text-white border border-gray-600 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 transition px-4 py-2" />
+                class="w-full rounded-lg bg-custom-1c1e23 text-white border border-gray-600 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 transition px-4 py-2 animated-input" />
             </div>
       
             <!-- RAM -->
             <div>
               <label for="memory" class="block text-sm font-medium text-gray-300 mb-2">RAM (MB)</label>
               <input type="number" name="memory" id="memory" max="4096" value="4096"
-                class="w-full rounded-lg bg-[#1c1e23] text-white border border-gray-600 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 transition px-4 py-2" />
+                class="w-full rounded-lg bg-custom-1c1e23 text-white border border-gray-600 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 transition px-4 py-2 animated-input" />
             </div>
       
             <!-- CPU -->
             <div>
                 <label for="cpu" class="block text-sm font-medium text-gray-300 mb-2">CPU (cores)</label>
               <input type="number" name="cpu" id="cpu" max="1" value="1"
-                class="w-full rounded-lg bg-[#1c1e23] text-white border border-gray-600 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 transition px-4 py-2" />
+                class="w-full rounded-lg bg-custom-1c1e23 text-white border border-gray-600 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 transition px-4 py-2 animated-input" />
             </div>
       
             <!-- Disk -->
             <div>
               <label for="disk" class="block text-sm font-medium text-gray-300 mb-2">Disk (GB)</label>
               <input type="number" name="disk" id="disk" value="10"
-                class="w-full rounded-lg bg-[#1c1e23] text-white border border-gray-600 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 transition px-4 py-2" />
+                class="w-full rounded-lg bg-custom-1c1e23 text-white border border-gray-600 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 transition px-4 py-2 animated-input" />
             </div>
           </div>
       
@@ -99,7 +157,7 @@
           <div class="w-full">
             <label class="block text-sm font-medium text-gray-300 mb-2">Node</label>
             <select id="node" 
-            class="w-full rounded-lg bg-[#1c1e23] text-white border border-gray-600 focus:ring-blue-500 focus:border-blue-500 px-4 py-2">
+            class="w-full rounded-lg bg-custom-1c1e23 text-white border border-gray-600 focus:ring-blue-500 focus:border-blue-500 px-4 py-2 animated-input">
               <% nodes.forEach(function(node) { %>
                 <option value="<%= node.id %>"><%= node.name %></option>
               <% }); %>
@@ -111,7 +169,7 @@
             <label class="block text-sm font-medium text-gray-300 mb-2">Image</label>
             <select id="image" onchange="updateImageName()" 
             style="font-family: 'Inter'"
-            class="w-full rounded-lg bg-[#1c1e23] text-white border border-gray-600 focus:ring-blue-500 focus:border-blue-500 px-4 py-2">
+            class="w-full rounded-lg bg-custom-1c1e23 text-white border border-gray-600 focus:ring-blue-500 focus:border-blue-500 px-4 py-2 animated-input">
               <% images.forEach(function(image) { %>
                 <option style="font-family: 'Inter'" value="<%= image.Image %>" data-variables='<%= JSON.stringify(image.Variables) %>'>
                   <%= image.Name %>
@@ -126,8 +184,8 @@
       
           <!-- Submit Button -->
           <div class="flex justify-end">
-            <button type="button" onclick="submitForm()" 
-              class="px-6 py-3 bg-blue-600 text-white rounded-full shadow-md hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+            <button type="button" onclick="submitForm()" id="submitButton"
+              class="px-6 py-3 bg-blue-600 text-white rounded-full shadow-md hover:bg-blue-700 transition animated-button focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
               Create Server
             </button>
           </div>
@@ -143,47 +201,51 @@
         }
       
         function getSelectedImageName() {
-    const selectElement = document.getElementById('image'); // Replace with your select element's ID
-    const selectedOption = selectElement.options[selectElement.selectedIndex];
-    const imageName = selectedOption.textContent.trim(); // Get the text content of the selected option
-    return imageName;
-}
+          const selectElement = document.getElementById('image');
+          const selectedOption = selectElement.options[selectElement.selectedIndex];
+          const imageName = selectedOption.textContent.trim();
+          return imageName;
+        }
+
         function checkVariables() {
-    const select = document.getElementById("image");
-    const selectedOption = select.options[select.selectedIndex];
-    const variables = JSON.parse(selectedOption.getAttribute('data-variables') || '{}');
-    const container = document.getElementById("variablesContainer");
+          const select = document.getElementById("image");
+          const selectedOption = select.options[select.selectedIndex];
+          const variables = JSON.parse(selectedOption.getAttribute('data-variables') || '{}');
+          const container = document.getElementById("variablesContainer");
+        
+          console.log(variables);  // Log for debugging
+        
+          container.innerHTML = '';
+          if (Object.keys(variables).length > 0) {
+            for (const [key, value] of Object.entries(variables)) {
+              const input = document.createElement('input');
+              input.type = value.type || 'text';
+              input.placeholder = `${key} (default: ${value.default || ''})`;
+              input.className = 'w-full rounded-lg bg-custom-1c1e23 text-white border border-gray-600 focus:ring-green-500 px-4 py-2 mb-2';
+              input.id = key;
+              container.appendChild(input);
+            }
+          } else {
+            console.log("No variables to display.");
+          }
+        }
   
-    console.log(variables);  // Log for debugging
-  
-    container.innerHTML = '';
-    if (Object.keys(variables).length > 0) {
-      for (const [key, value] of Object.entries(variables)) {
-        const input = document.createElement('input');
-        input.type = value.type || 'text';
-        input.placeholder = `${key} (default: ${value.default || ''})`;
-        input.className = 'w-full rounded-lg bg-[#1c1e23] text-white border border-gray-600 focus:ring-green-500 px-4 py-2 mb-2';
-        input.id = key;
-        container.appendChild(input);
-      }
-    } else {
-      console.log("No variables to display.");
-    }
-  }
-  
-    function generateRandom5DigitNumber() {
-        return Math.floor(10000 + Math.random() * 90000); // Ensures a 5-digit number
-    }
+        function generateRandom5DigitNumber() {
+            return Math.floor(10000 + Math.random() * 90000); // Ensures a 5-digit number
+        }
 
-    function getRandomPorts() {
-    // Generate two random 5-digit numbers
-    const port1 = generateRandom5DigitNumber();
-
-    // Return in the format "random5digitnumber:random5digitnumber"
-    return `${port1}:${port1}`;
-    }
+        function getRandomPorts() {
+          const port1 = generateRandom5DigitNumber();
+          return `${port1}:${port1}`;
+        }
 
         async function submitForm() {
+          if (!validateForm()) return;
+
+          const button = document.getElementById("submitButton");
+          button.disabled = true;
+          button.innerText = "Creating...";
+
           const name = encodeURIComponent(document.getElementById("name").value);
           const image = encodeURIComponent(document.getElementById("image").value);
           const imageName = getSelectedImageName();
@@ -200,7 +262,31 @@
       
           document.location.href = `/create?name=${name}&image=${image}&imageName=${imageName}&ram=${memory}&cpu=${cpu}&nodeId=${nodeId}&variables=${variablesJSON}&user=${userId}&ports=${ports}&primary=${primary_port}`;
         }
+
+        function validateForm() {
+          const name = document.getElementById("name").value.trim();
+          const memory = document.getElementById("memory").value;
+          const cpu = document.getElementById("cpu").value;
+          const disk = document.getElementById("disk").value;
+
+          if (name === "") {
+              alertify.error("Server Name cannot be empty.");
+              return false;
+          }
+          if (memory < 512 || memory > 4096) {
+              alertify.error("RAM must be between 512MB and 4096MB.");
+              return false;
+          }
+          if (cpu < 1 || cpu > 1) {
+              alertify.error("CPU must be exactly 1 core.");
+              return false;
+          }
+          if (disk < 1 || disk > 100) {
+              alertify.error("Disk must be between 1GB and 100GB.");
+              return false;
+          }
+          return true;
+        }
       </script>
-      
-                                                  
-                          
+  </main>
+</div>
