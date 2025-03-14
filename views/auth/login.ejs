@@ -8,18 +8,69 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://api.fontshare.com/v2/css?f[]=general-sans@500,300,600,400,700&display=swap" rel="stylesheet">
+  <style>
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+    @keyframes buttonHover {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    @keyframes buttonClick {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(0.95);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    @keyframes inputFocus {
+      0% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.5);
+      }
+      100% {
+        box-shadow: 0 0 10px 5px rgba(99, 102, 241, 0.5);
+      }
+    }
+    @keyframes inputTyping {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.02);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+  </style>
 </head>
 
-<body class="bg-[#0b0d0f] text-gray-300 min-h-screen flex flex-col">
+<body class="bg-[#1a202c] text-gray-300 min-h-screen flex flex-col">
    <main class="flex-grow flex items-center justify-center p-8">
        <div class="py-8 px-6 md:py-12 md:px-8 max-w-md w-full">
-        <div class="flex justify-center mt-4">
+        <div class="flex justify-center mt-4 animate-bounce">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16 text-white">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
             </svg>
         </div>
 
-        <h2 class="text-center text-3xl md:text-4xl font-extrabold text-white tracking-tight">Welcome back!</h2>
+        <h2 class="text-center text-3xl md:text-4xl font-extrabold text-white tracking-tight">Welcome back to Executorx hosting!</h2>
         <p class="text-center text-gray-400 mt-2 text-sm md:text-base">Sign in to your account to continue</p>
            
            <!-- User/Password Login Form -->
@@ -28,21 +79,35 @@
                    <input type="username" 
                    id="username" 
                    name="username" 
-                   class="flex-grow p-2 w-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white rounded-lg placeholder-gray-400" 
+                   class="flex-grow p-2 w-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white rounded-lg placeholder-gray-400 focus:animate-inputFocus" 
                    placeholder="Username" 
-                   required>
+                   required
+                   oninput="this.style.animation='inputTyping 0.5s ease';">
                 </div>
                <div>
                 <input type="password" 
                 id="password" 
                 name="password" 
-                class="flex-grow p-2 w-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white rounded-lg placeholder-gray-400" 
+                class="flex-grow p-2 w-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white rounded-lg placeholder-gray-400 focus:animate-inputFocus" 
                 placeholder="Password" 
-                required>               </div>
-                <button type="submit" class="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-5 rounded-lg transition duration-300">                     
+                required
+                oninput="this.style.animation='inputTyping 0.5s ease';">               
+               </div>
+                <button type="submit" class="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-5 rounded-lg transition duration-300 hover:animate-buttonHover active:animate-buttonClick">                     
                     <span>Sign in</span>
                 </button>
                 
            </form>
+           <div class="mt-4">
+                <a href="https://discord.gg/UpsVZg5S27" target="_blank" class="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-5 rounded-lg transition duration-300 hover:animate-buttonHover active:animate-buttonClick">
+                    <span>Join our Discord Server for Updates</span>
+                </a>
+           </div>
+           <div class="mt-8 text-center text-gray-400">
+                <p>MADE By JHON DRHEY D. DACUADO</p>
+                <p>Made with Jexactyl</p>
+           </div>
        </div>
    </main>
+</body>
+</html>
