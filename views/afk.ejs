@@ -1,6 +1,6 @@
 <%- include('components/template') %>
 <!-- Main Content -->
-<main class="flex-grow container mx-auto px-4 py-8">
+<main class="flex-grow container mx-auto px-4 py-8 bg-gray-900">
   
     <div class="flex justify-between items-center w-full mx-auto pb-4">
         <!-- Welcome text and subtext on the left -->
@@ -71,7 +71,24 @@
             <script>
                 let session = 0;
                 let afkTime = 0;
+                let currentCoins = 0; // Add this line to track current coins
                 
+                function showNotification(message) {
+                  const notification = document.createElement('div');
+                  notification.className = 'notification';
+                  notification.innerHTML = message;
+                  document.body.appendChild(notification);
+                  setTimeout(() => {
+                    notification.classList.add('show');
+                    setTimeout(() => {
+                      notification.classList.remove('show');
+                      setTimeout(() => {
+                        document.body.removeChild(notification);
+                      }, 300);
+                    }, 3000);
+                  }, 100);
+                }
+
                 function connect() {
                   const ws = new WebSocket(`${window.location.href.startsWith("https://") ? "wss" : "ws"}://${window.location.href.replace("http://", "").replace("https://", "").split("/")[0]}/afkwspath`);
                   ws.onopen = () => {
@@ -89,8 +106,9 @@
                       document.getElementById("afkTime").innerHTML = `${hours} hours, ${minutes} minutes, and ${seconds} seconds`;
                     } else if (z.type == "coin") {
                       session++;
-                      currentCoins++;
-                      document.getElementById("sessionEarn").innerHTML = `${session} coins`;
+                      currentCoins += 5; // Update current coins by 5
+                      document.getElementById("sessionEarn").innerHTML = `${currentCoins} Coins`; // Update the displayed coins
+                      showNotification('You received 5 coins!');
                     }
                   };
                   ws.onerror = (err) => {
@@ -112,21 +130,32 @@
                   };
                 }
                 connect();
+
+                function handleLinkvertiseClick() {
+                  const initialCoins = currentCoins;
+                  setTimeout(() => {
+                    if (currentCoins === initialCoins) { // Check if the user hasn't left the page
+                      currentCoins += 100; // Give 100 coins
+                      document.getElementById("sessionEarn").innerHTML = `${currentCoins} Coins`; // Update the displayed coins
+                      showNotification('You received 100 coins!');
+                    }
+                  }, 20000); // Wait for 20 seconds
+                }
               </script>
             <form>
                 <div class="flex justify-between mb-6">
-                    <button type="button" class="bg-blue-600 text-sm font-medium text-white px-4 py-2 rounded-full hover:bg-blue-700 transition"><code id="coinCountdown"><script>
+                    <button type="button" class="bg-green-600 text-sm font-medium text-white px-4 py-2 rounded-full hover:bg-green-700 transition"><code id="coinCountdown"><script>
                       
                   </script></code></button>
-                    <button type="button" class="text-sm font-medium bg-gray-200 text-gray-700 px-4 py-2 rounded-full transition hover:bg-gray-300"><code id="sessionEarn">0 Coins</code></button>
+                    <button type="button" class="text-sm font-medium bg-yellow-200 text-gray-700 px-4 py-2 rounded-full transition hover:bg-yellow-300"><code id="sessionEarn">0 Coins</code></button>
                 </div>
             </form>
             <div class="border-t border-white/5">
             <p class="text-sm tracking-widest text-gray-500 uppercase mb-3 mt-16">WHY NOT COMPLETE LINKVERTISE LINKS WHILE YOU AFK?</p>
                 <p class="text-2xl font-bold text-white"><code id="usedToday"></code>Linkvertise</p>
-                <p class="mt-2 text-sm text-gray-300">For every Linkvertise link you complete, you will get 10 HPC.</p>
+                <p class="mt-2 text-sm text-gray-300">For every Linkvertise link you complete, you will get 100 Coins.</p>
                 <div class="mt-4 flex justify-center">
-                    <a href="./lv" target="_blank" class="cursor-pointer transition ease-in-out group relative flex justify-center rounded-full border border-transparent py-2 px-6 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">
+                    <a href="https://linkvertise.com/1176103/executorx-hosting?o=sharing" target="_blank" class="cursor-pointer transition ease-in-out group relative flex justify-center rounded-full border border-transparent py-2 px-6 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none" onclick="handleLinkvertiseClick()">
                         Go to Linkvertise
                     </a>
                 </div>
@@ -139,3 +168,21 @@
         <!-- Footer -->
         <%- include('./components/footer') %>
     </div>
+
+<style>
+  .notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4caf50;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .notification.show {
+    opacity: 1;
+  }
+</style>
