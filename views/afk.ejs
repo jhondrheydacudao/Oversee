@@ -1,7 +1,25 @@
 <%- include('components/template') %>
+<head>
+    <!-- Favicon -->
+    <link rel="icon" href="https://yt3.googleusercontent.com/IVqzx0L3Ffpapttg-WK5yU9frk4AIVKixHnmmQjQ7RLrt4e66-7Ox6srKG_QVat5ceEq-98-s9s=s160-c-k-c0x00ffffff-no-rj" type="image/x-icon">
+    <style>
+        /* Updated Background Gradient */
+        body {
+            background: linear-gradient(135deg, #6EE7B7, #3B82F6); /* A smooth gradient from a teal to blue */
+            font-family: 'Cabin', sans-serif;
+            color: white;
+        }
+        /* Optional: Add a dark overlay to make text pop on the background */
+        .container {
+            background: rgba(0, 0, 0, 0.6); /* Adds dark overlay to improve text readability */
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
 <!-- Main Content -->
 <main class="flex-grow container mx-auto px-4 py-8">
-  
     <div class="flex justify-between items-center w-full mx-auto pb-4">
         <!-- Welcome text and subtext on the left -->
         <div class="flex flex-col">
@@ -88,9 +106,18 @@
                       const seconds = afkTime % 60;
                       document.getElementById("afkTime").innerHTML = `${hours} hours, ${minutes} minutes, and ${seconds} seconds`;
                     } else if (z.type == "coin") {
-                      session++;
-                      currentCoins++;
+                      session += 90;  // Adds 90 coins
                       document.getElementById("sessionEarn").innerHTML = `${session} coins`;
+
+                      // Display notification
+                      const notification = document.createElement('div');
+                      notification.classList.add('fixed', 'top-0', 'left-1/2', 'transform', 'translate-x-[-50%]', 'bg-green-500', 'text-white', 'px-6', 'py-3', 'rounded', 'shadow-lg', 'opacity-90', 'z-50');
+                      notification.innerHTML = 'You got 90 coins!';
+                      document.body.appendChild(notification);
+
+                      setTimeout(() => {
+                        notification.remove();  // Remove notification after 5 seconds
+                      }, 5000);
                     }
                   };
                   ws.onerror = (err) => {
@@ -113,29 +140,21 @@
                 }
                 connect();
               </script>
+
             <form>
                 <div class="flex justify-between mb-6">
-                    <button type="button" class="bg-blue-600 text-sm font-medium text-white px-4 py-2 rounded-full hover:bg-blue-700 transition"><code id="coinCountdown"><script>
-                      
-                  </script></code></button>
-                    <button type="button" class="text-sm font-medium bg-gray-200 text-gray-700 px-4 py-2 rounded-full transition hover:bg-gray-300"><code id="sessionEarn">0 Coins</code></button>
+                    <button type="button" class="bg-blue-600 text-sm font-medium text-white px-4 py-2 rounded-full hover:bg-blue-700 transition">
+                        <code id="coinCountdown"></code>
+                    </button>
+                    <button type="button" class="text-sm font-medium bg-gray-200 text-gray-700 px-4 py-2 rounded-full transition hover:bg-gray-300">
+                        <code id="sessionEarn">0 Coins</code>
+                    </button>
                 </div>
             </form>
-            <div class="border-t border-white/5">
-            <p class="text-sm tracking-widest text-gray-500 uppercase mb-3 mt-16">WHY NOT COMPLETE LINKVERTISE LINKS WHILE YOU AFK?</p>
-                <p class="text-2xl font-bold text-white"><code id="usedToday"></code>Linkvertise</p>
-                <p class="mt-2 text-sm text-gray-300">For every Linkvertise link you complete, you will get 10 HPC.</p>
-                <div class="mt-4 flex justify-center">
-                    <a href="./lv" target="_blank" class="cursor-pointer transition ease-in-out group relative flex justify-center rounded-full border border-transparent py-2 px-6 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">
-                        Go to Linkvertise
-                    </a>
-                </div>
-            </div>
+
         </div>
     </div>
 </main>
 
-
-        <!-- Footer -->
-        <%- include('./components/footer') %>
-    </div>
+<!-- Footer -->
+<%- include('./components/footer') %>
