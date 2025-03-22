@@ -132,7 +132,7 @@ async function main() {
 
     try {
         await createUser(username, email, password);
-        log.info("Done! User created.");
+        log.info("account created.");
         rl.close();
     } catch (err) {
         log.error('Error creating user:', err);
