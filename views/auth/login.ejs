@@ -3,46 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= name %> - Login</title>
+  <title>Pterodactyl - Login</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://api.fontshare.com/v2/css?f[]=general-sans@500,300,600,400,700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #0f131a;
+      font-family: 'General Sans', sans-serif;
+    }
+    .glass-bg {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
+    .input-field {
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .input-field:focus {
+      border-color: #8c5bff;
+      outline: none;
+      box-shadow: 0 0 5px #8c5bff;
+    }
+    .login-btn {
+      background: linear-gradient(90deg, #8c5bff, #6a42cc);
+    }
+    .login-btn:hover {
+      background: #6a42cc;
+    }
+    .footer-text {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+  </style>
 </head>
 
-<body class="bg-[#0b0d0f] text-gray-300 min-h-screen flex flex-col">
-   <main class="flex-grow flex items-center justify-center p-8">
-       <div class="py-8 px-6 md:py-12 md:px-8 max-w-md w-full">
-        <div class="flex justify-center mt-4">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16 text-white">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-            </svg>
-        </div>
+<body class="min-h-screen flex flex-col items-center justify-center">
+  <main class="max-w-md w-full p-8 rounded-lg glass-bg text-white">
+    <h2 class="text-center text-2xl font-semibold">Sign in to Pterodactyl</h2>
+    
+    <!-- Login Form -->
+    <form method="POST" action="/auth/login" class="mt-6 space-y-4">
+      <input type="hidden" name="_token" value="{{ csrf_token() }}">
+      
+      <div>
+        <input type="text" 
+        id="username" 
+        name="username" 
+        class="input-field w-full p-3 rounded-md text-white placeholder-gray-400" 
+        placeholder="Username or Email" 
+        required>
+      </div>
 
-        <h2 class="text-center text-3xl md:text-4xl font-extrabold text-white tracking-tight">Welcome back!</h2>
-        <p class="text-center text-gray-400 mt-2 text-sm md:text-base">Sign in to your account to continue</p>
-           
-           <!-- User/Password Login Form -->
-           <form method="GET" action="/auth/login" class="mt-8 space-y-4">
-               <div>
-                   <input type="username" 
-                   id="username" 
-                   name="username" 
-                   class="flex-grow p-2 w-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white rounded-lg placeholder-gray-400" 
-                   placeholder="Username" 
-                   required>
-                </div>
-               <div>
-                <input type="password" 
-                id="password" 
-                name="password" 
-                class="flex-grow p-2 w-full bg-white/10 border border-white/10 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-white rounded-lg placeholder-gray-400" 
-                placeholder="Password" 
-                required>               </div>
-                <button type="submit" class="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-5 rounded-lg transition duration-300">                     
-                    <span>Sign in</span>
-                </button>
-                
-           </form>
-       </div>
-   </main>
+      <div>
+        <input type="password" 
+        id="password" 
+        name="password" 
+        class="input-field w-full p-3 rounded-md text-white placeholder-gray-400" 
+        placeholder="Password" 
+        required>
+      </div>
+
+      <button type="submit" class="login-btn w-full text-white font-semibold py-3 rounded-md transition duration-300">                     
+        Sign in
+      </button>
+    </form>
+
+    <!-- Footer -->
+    <p class="text-center footer-text mt-6">
+      Made with <a href="https://pterodactyl.io" target="_blank" class="text-indigo-400 hover:underline">Pterodactyl</a>
+    </p>
+  </main>
+</body>
+</html>
