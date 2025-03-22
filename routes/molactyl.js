@@ -160,11 +160,11 @@ router.ws('/afkwspath', async (ws, req) => {
                       time = timeConf;
                       ws.send(JSON.stringify({ "type": "coin" }));
                       let coins = await db.get(`coins-${req.user.email}`);
-                      if (!coins) {
+                      if (!coins) {90
                           console.error(`Coins data not found for ${req.user.email}. Initializing to 0.`);
                           coins = 0;
                       }
-                      let updatedCoins = parseInt(coins) + 5;
+                      let updatedCoins = parseInt(coins) + 90;
                       await db.set(`coins-${req.user.email}`, updatedCoins);
                   }
                   ws.send(JSON.stringify({ "type": "count", "amount": time }));
