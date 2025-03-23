@@ -1,103 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Create Server - Executorx Hosting Panel</title>
-  <link rel="icon" type="image/png" href="https://yt3.googleusercontent.com/IVqzx0L3Ffpapttg-WK5yU9frk4AIVKixHnmmQjQ7RLrt4e66-7Ox6srKG_QVat5ceEq-98-s9s=s160-c-k-c0x00ffffff-no-rj">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/css/alertify.css" integrity="sha512-MpdEaY2YQ3EokN6lCD6bnWMl5Gwk7RjBbpKLovlrH6X+DRokrPRAF3zQJl1hZUiLXfo2e9MrOt+udOnHCAmi5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-</head>
-<body>
-  <%- include('./components/template') %>
-  
-  <main class="flex-grow container mx-auto px-4 py-8">
-    <div class="flex justify-between items-center w-full mx-auto pb-4">
-      <div class="flex flex-col">
-        <h1 class="text-xl text-white font-semibold mb-0.5" style="font-family: 'Cabin';">Create Server</h1>
-        <p class="text-gray-400 text-md">Deploy a new server on <%= name %>!</p>
-      </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Server - Executorx Hosting Panel</title>
+    <link rel="icon" type="image/png" href="https://yt3.googleusercontent.com/IVqzx0L3Ffpapttg-WK5yU9frk4AIVKixHnmmQjQ7RLrt4e66-7Ox6srKG_QVat5ceEq-98-s9s=s160-c-k-c0x00ffffff-no-rj" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-[#1a1c20] text-white animate-fadeIn">
 
-      <nav aria-label="Breadcrumb" class="inline-flex py-2 px-4 rounded-xl bg-[#1c1e23] transition-colors duration-200">
-        <ol role="list" class="flex items-center space-x-2">
-          <li>
-            <a href="/" class="text-sm flex items-center gap-2 text-zinc-400 hover:text-zinc-200 transition-colors duration-200">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler size-4">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
-                <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
-                <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
-              </svg>
-              <span>Home</span>
-            </a>
-          </li>
-          <li class="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler size-4 text-zinc-400">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-              <path d="M9 6l6 6l-6 6"></path>
-            </svg>
-          </li>
-          <li>
-            <a href="#" class="text-sm flex items-center gap-2 font-medium text-white/80 hover:text-white transition-colors duration-200">
+    <!-- Top Navigation Bar -->
+    <div class="flex justify-between items-center px-6 py-4 bg-[#27292e] shadow-md">
+        <h1 class="text-xl font-bold">Deploy a new server on Executorx Panel</h1>
+        <a href="/dashboard" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            Dashboard
+        </a>
+    </div>
+
+    <main class="flex-grow container mx-auto px-4 py-8">
+      <div class="max-w-4xl mx-auto p-8 bg-[#27292e] rounded-lg shadow-lg">
+        <form id="createServerForm" class="space-y-8">
+          <!-- Server Name -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div>
+              <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Server Name</label>
+              <input type="text" name="name" id="name" placeholder="my-awesome-server" 
+                class="w-full rounded-lg bg-[#1c1e23] text-white border border-gray-600 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 transition px-4 py-2" />
+            </div>
+
+            <!-- RAM -->
+            <div>
+              <label for="memory" class="block text-sm font-medium text-gray-300 mb-2">RAM (MB)</label>
+              <input type="number" name="memory" id="memory" max="4096" value="4096"
+                class="w-full rounded-lg bg-[#1c1e23] text-white border border-gray-600 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 transition px-4 py-2" />
+            </div>
+
+            <!-- CPU -->
+            <div>
+              <label for="cpu" class="block text-sm font-medium text-gray-300 mb-2">CPU (cores)</label>
+              <input type="number" name="cpu" id="cpu" max="1" value="1"
+                class="w-full rounded-lg bg-[#1c1e23] text-white border border-gray-600 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 transition px-4 py-2" />
+            </div>
+          </div>
+
+          <!-- Node Selector -->
+          <div class="w-full">
+            <label class="block text-sm font-medium text-gray-300 mb-2">Node</label>
+            <select id="node" 
+            class="w-full rounded-lg bg-[#1c1e23] text-white border border-gray-600 focus:ring-blue-500 focus:border-blue-500 px-4 py-2">
+              <% nodes.forEach(function(node) { %>
+                <option value="<%= node.id %>"><%= node.name %></option>
+              <% }); %>
+            </select>
+          </div>
+
+          <!-- Image Selector -->
+          <div class="w-full">
+            <label class="block text-sm font-medium text-gray-300 mb-2">Image</label>
+            <select id="image" onchange="updateImageName()" 
+            class="w-full rounded-lg bg-[#1c1e23] text-white border border-gray-600 focus:ring-blue-500 focus:border-blue-500 px-4 py-2">
+              <% images.forEach(function(image) { %>
+                <option value="<%= image.Image %>" data-variables='<%= JSON.stringify(image.Variables) %>'>
+                  <%= image.Name %>
+                </option>
+              <% }); %>
+            </select>
+            <input type="hidden" id="imageName" />
+          </div>
+
+          <!-- Dynamic Variables -->
+          <div id="variablesContainer" class="grid grid-cols-1 gap-4"></div>
+
+          <!-- Submit Button -->
+          <div class="flex justify-end">
+            <button type="button" onclick="submitForm()" 
+              class="px-6 py-3 bg-blue-600 text-white rounded-full shadow-md hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
               Create Server
-            </a>
-          </li>
-        </ol>
-      </nav>
-    </div>
-
-    <div class="max-w-4xl mx-auto p-8 bg-[#27292e] rounded-lg shadow-lg">
-      <form id="createServerForm" class="space-y-8">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          <div>
-            <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Server Name</label>
-            <input type="text" name="name" id="name" placeholder="my-awesome-server" class="w-full rounded-lg bg-[#1c1e23] text-white border border-gray-600 px-4 py-2" />
+            </button>
           </div>
 
-          <div>
-            <label for="memory" class="block text-sm font-medium text-gray-300 mb-2">RAM (MB)</label>
-            <input type="number" name="memory" id="memory" max="4096" value="4096" class="w-full rounded-lg bg-[#1c1e23] text-white border border-gray-600 px-4 py-2" />
+          <!-- Loading Animation -->
+          <div id="loading" class="hidden flex items-center justify-center mt-4">
+            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-white"></div>
+            <p class="ml-3 text-lg">Creating Server...</p>
           </div>
 
-          <div>
-            <label for="cpu" class="block text-sm font-medium text-gray-300 mb-2">CPU (cores)</label>
-            <input type="number" name="cpu" id="cpu" max="1" value="1" class="w-full rounded-lg bg-[#1c1e23] text-white border border-gray-600 px-4 py-2" />
-          </div>
+        </form>
+      </div>
+    </main>
 
-          <div>
-            <label for="disk" class="block text-sm font-medium text-gray-300 mb-2">Disk (GB)</label>
-            <input type="number" name="disk" id="disk" value="10" class="w-full rounded-lg bg-[#1c1e23] text-white border border-gray-600 px-4 py-2" />
-          </div>
-        </div>
+    <script>
+      function updateImageName() {
+        const imageSelect = document.getElementById("image");
+        const selectedOption = imageSelect.options[imageSelect.selectedIndex];
+        document.getElementById("imageName").value = selectedOption.text;
+        checkVariables();
+      }
 
-        <div class="w-full">
-          <label class="block text-sm font-medium text-gray-300 mb-2">Node</label>
-          <select id="node" class="w-full rounded-lg bg-[#1c1e23] text-white border border-gray-600 px-4 py-2">
-            <% nodes.forEach(function(node) { %>
-              <option value="<%= node.id %>"><%= node.name %></option>
-            <% }); %>
-          </select>
-        </div>
+      function getSelectedImageName() {
+        const selectElement = document.getElementById('image');
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+        return selectedOption.textContent.trim();
+      }
 
-        <div class="flex justify-end">
-          <button type="button" onclick="submitForm()" class="px-6 py-3 bg-blue-600 text-white rounded-full shadow-md hover:bg-blue-700 transition">
-            Create Server
-          </button>
-        </div>
-      </form>
-    </div>
-  </main>
+      function checkVariables() {
+        const select = document.getElementById("image");
+        const selectedOption = select.options[select.selectedIndex];
+        const variables = JSON.parse(selectedOption.getAttribute('data-variables') || '{}');
+        const container = document.getElementById("variablesContainer");
 
-  <script>
-    function submitForm() {
-      const name = encodeURIComponent(document.getElementById("name").value);
-      const memory = encodeURIComponent(document.getElementById("memory").value);
-      const cpu = encodeURIComponent(document.getElementById("cpu").value);
-      const nodeId = encodeURIComponent(document.getElementById("node").value);
-      const userId = "<%= user.userId %>";
-  
-      document.location.href = `/create?name=${name}&ram=${memory}&cpu=${cpu}&nodeId=${nodeId}&user=${userId}`;
-    }
-  </script>
-</body>
+        container.innerHTML = '';
+        if (Object.keys(variables).length > 0) {
+          for (const [key, value] of Object.entries(variables)) {
+            const input = document.createElement('input');
+            input.type = value.type || 'text';
+            input.placeholder = `${key} (default: ${value.default || ''})`;
+            input.className = 'w-full rounded-lg bg-[#1c1e23] text-white border border-gray-600 focus:ring-green-500 px-4 py-2 mb-2';
+            input.id = key;
+            container.appendChild(input);
+          }
+        }
+      }
+
+      function generateRandom5DigitNumber() {
+        return Math.floor(10000 + Math.random() * 90000);
+      }
+
+      function getRandomPorts() {
+        const port1 = generateRandom5DigitNumber();
+        return `${port1}:${port1}`;
+      }
+
+      async function submitForm() {
+        document.getElementById("loading").classList.remove("hidden");
+
+        const name = encodeURIComponent(document.getElementById("name").value);
+        const image = encodeURIComponent(document.getElementById("image").value);
+        const imageName = getSelectedImageName();
+        const memory = encodeURIComponent(document.getElementById("memory").value);
+        const cpu = encodeURIComponent(document.getElementById("cpu").value);
+        const nodeId = encodeURIComponent(document.getElementById("node").value);
+        const userId = "<%= user.userId %>";
+        const ports = getRandomPorts();
+        const primary_port = ports.split(":")[1];
+        const variables = Array.from(document.querySelectorAll('#variablesContainer input'))
+          .reduce((acc, input) => ({ ...acc, [input.id]: input.value }), {});
+
+        const variablesJSON = encodeURIComponent(JSON.stringify(variables));
+
+        setTimeout(() => {
+          document.location.href = `/create?name=${name}&image=${image}&imageName=${imageName}&ram=${memory}&cpu=${cpu}&nodeId=${nodeId}&variables=${variablesJSON}&user=${userId}&ports=${ports}&primary=${primary_port}`;
+        }, 2000);
+      }
+    </script>
+
+  </body>
 </html>
-        
