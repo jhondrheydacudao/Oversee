@@ -1,10 +1,3 @@
-/**
- * @fileoverview This module sets up the authentication routes using Passport for user
- * authentication with a local strategy. It handles user login, logout, and registration processes.
- * User credentials are verified against a custom database handler, and sessions are managed
- * through Passport's session handling.
- */
-
 const express = require('express');
 const passport = require('passport');
 const config = require('../config.json');
