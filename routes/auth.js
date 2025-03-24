@@ -519,6 +519,47 @@ router.post('/auth/reset/:token', async (req, res) => {
   }
 });
 
+// GET /credentials - Show user credentials
+router.get('/credentials', isAuthenticated, async (req, res) => {
+    try {
+        const users = await db.get('users') || [];
+        const user = users.find(u => u.username === req.user.username);
+
+        if (!user) return res.redirect('/login');
+
+        res.render('auth/credentials', {
+            req,
+            user,
+            name: await db.get('name') || 'Executorx',
+            logo: await db.get('logo') || false
+        });
+    } catch (error) {
+        console.error('Error fetching credentials:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// POST /credentials/reset - Reset user password
+router.post('/credentials/reset', isAuthenticated, async (req, res) => {
+    try {
+        let users = await db.get('users') || [];
+        let userIndex = users.findIndex(u => u.username === req.user.username);
+
+        if (userIndex === -1) return res.redirect('/credentials?err=UserNotFound');
+
+        const newPassword = generateRandomCode(12);
+        users[userIndex].password = await bcrypt.hash(newPassword, saltRounds);
+        await db.set('users', users);
+
+        await sendPasswordResetEmail(users[userIndex].email, newPassword);
+
+        res.redirect('/credentials?msg=PasswordReset');
+    } catch (error) {
+        console.error('Error resetting credentials:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 function generateRandomCode(length) {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
