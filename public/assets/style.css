@@ -1,0 +1,103 @@
+/* filepath: /workspaces/Oversee/public/styles.css */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #0f131a; /* Dark background like the login page */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 120vh; /* Increased height to take more space */
+}
+
+.container {
+  max-width: 500px;  /* Increase max width for larger container */
+  width: 100%;
+  margin: 50px;
+  padding: 50px;  /* Increased padding for larger content area */
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);  /* Increased blur for stronger glass effect */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);  /* Increased shadow for more depth */
+  border-radius: 12px;  /* Larger rounded corners */
+  text-align: center;
+  color: white;
+  transition: transform 0.3s ease-in-out;
+}
+
+.container:hover {
+  transform: translateY(-8px);  /* Slightly more pronounced hover effect */
+}
+
+h1 {
+  font-size: 30px;  /* Larger heading size */
+  margin-bottom: 40px;  /* More space below the title */
+  color: #fff;
+  font-weight: 600;
+}
+
+p {
+  font-size: 22px;  /* Increased paragraph font size */
+  margin-bottom: 20px;  /* More space below text */
+  color: #bbb;  /* Softer gray for text */
+}
+
+button {
+  background: linear-gradient(90deg, #8c5bff, #6a42cc);
+  color: #fff;
+  border: none;
+  padding: 16px 32px;  /* Larger button padding */
+  cursor: pointer;
+  border-radius: 8px;  /* Larger rounded corners for button */
+  margin-top: 40px;  /* Increased space above the button */
+  font-size: 20px;  /* Larger font size for the button */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+  background: #6a42cc;
+  transform: scale(1.1);  /* Larger scale effect on hover */
+}
+
+a {
+  display: inline-block;
+  margin-top: 40px;  /* More space above the link */
+  color: #8c5bff;
+  text-decoration: none;
+  font-size: 18px;  /* Increased font size for the link */
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.success {
+  color: green;
+  margin-top: 30px;
+  font-weight: 600;
+}
+
+.error {
+  color: red;
+  margin-top: 30px;
+  font-weight: 600;
+}
+
+@media screen and (max-width: 480px) {
+  .container {
+    padding: 30px;  /* Adjust padding for small screens */
+    margin: 30px;
+  }
+  
+  h1 {
+    font-size: 28px;  /* Adjust heading font size */
+  }
+
+  p {
+    font-size: 20px;  /* Adjust paragraph font size */
+  }
+
+  button {
+    padding: 14px 28px;  /* Adjust button size for small screens */
+    font-size: 18px;
+  }
+}
