@@ -1,6 +1,6 @@
 {
-    "baseUri": "5.254.5.17:3362",
-    "port": 3362,
+    "baseUri": "5.254.5.17:25577",
+    "port": 25577,
     "domain": "5.254.5.17",
     "mode": "production",
     "version": "0.1.3",
