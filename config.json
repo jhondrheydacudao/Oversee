@@ -1,6 +1,6 @@
 {
     "baseUri": "38.242.196.10:25588",
-    "port": 25577,
+    "port": 25588,
     "domain": "38.242.196.10",
     "mode": "production",
     "version": "0.1.3",
