@@ -560,6 +560,36 @@ router.post('/credentials/reset', isAuthenticated, async (req, res) => {
     }
 });
 
+// Test SMTP email route
+router.post("/sendTestEmail", async (req, res) => {
+    const { recipientEmail } = req.body;
+
+    // Your SMTP credentials
+    const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com", // Change this
+        port: 465, // Use 465 for SSL
+        secure: true, // True for 465, false for other ports
+        auth: {
+            user: "jhondrheydacudao0@gmail.com", // Change this
+            pass: "", // Use an App Password, not your real password
+        },
+    });
+
+    try {
+        await transporter.sendMail({
+            from: '"Your Panel" <your-email@example.com>', // Change this
+            to: recipientEmail,
+            subject: "SMTP Test Email",
+            text: "This is a test email from Executorx Hosting Panel.",
+        });
+
+        res.redirect("/admin/settings?msg=TestemailSentsuccess");
+    } catch (error) {
+        console.error("SMTP Test Email Error:", error);
+        res.redirect("/admin/settings?err=TestemailSentfailed");
+    }
+});
+
 function generateRandomCode(length) {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
