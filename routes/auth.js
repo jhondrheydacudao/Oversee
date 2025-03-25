@@ -519,24 +519,32 @@ router.post('/auth/reset/:token', async (req, res) => {
   }
 });
 
+// Middleware to check if the user is authenticated
+function isAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/login');
+}
+
 // GET /credentials - Show user credentials
 router.get('/credentials', isAuthenticated, async (req, res) => {
-    try {
-        const users = await db.get('users') || [];
-        const user = users.find(u => u.username === req.user.username);
+  try {
+    const users = await db.get('users') || [];
+    const user = users.find(u => u.username === req.user.username);
 
-        if (!user) return res.redirect('/login');
+    if (!user) return res.redirect('/login');
 
-        res.render('auth/credentials', {
-            req,
-            user,
-            name: await db.get('name') || 'Executorx',
-            logo: await db.get('logo') || false
-        });
-    } catch (error) {
-        console.error('Error fetching credentials:', error);
-        res.status(500).send('Internal Server Error');
-    }
+    res.render('credentials', { // Correct path
+      req,
+      user,
+      name: await db.get('name') || 'Executorx',
+      logo: await db.get('logo') || false
+    });
+  } catch (error) {
+    console.error('Error fetching credentials:', error);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 // POST /credentials/reset - Reset user password
